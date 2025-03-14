@@ -6,7 +6,7 @@
 
 현재 설정된 포트는 다음과 같습니다:
 
-- Outline: 3030 (외부) -> 3000 (내부)
+- Outline: 3000 (외부) -> 3000 (내부)
 - Redis: 3031 (외부) -> 6379 (내부)
 - PostgreSQL: 3032 (외부) -> 5432 (내부)
 
@@ -30,21 +30,21 @@ cd outline-docker
 ### 2. 필수 디렉토리 생성
 
 ```bash
-mkdir -p storage-data database-data
+mkdir -p storage-data database-data redis.conf
 ```
 
 ### 3. 환경 설정 파일 준비
 
-#### 방법 1: 파일 복사
+#### 파일 복사
 
 ```bash
-cp docker.env.example docker.env
+cp docker.env.example docker.env.prod
 ```
 
-#### 방법 2: 심볼릭 링크 생성
+#### 심볼릭 링크 생성
 
 ```bash
-ln -s docker.env.example docker.env
+ln -s docker.env.prod docker.env
 ```
 
 ### 4. 환경 변수 수정
@@ -52,7 +52,7 @@ ln -s docker.env.example docker.env
 필요에 따라 docker.env 파일을 편집하여 환경 변수를 수정합니다:
 
 ```bash
-nano docker.env
+vim docker.env
 ```
 
 주요 수정 사항:
@@ -84,8 +84,8 @@ docker-compose logs outline
 
 ## 접속 방법
 
-- 로컬 접속: http://localhost:3030
-- 외부 접속: http://[서버IP]:3030
+- 로컬 접속: http://localhost:3000
+- 외부 접속: http://[서버IP]:3000
 - 프록시 설정 시: https://wiki.comin.com
 
 ## 환경 변수 설정
@@ -110,7 +110,7 @@ docker-compose logs outline
 2. 포트 사용 여부 확인
 
    ```bash
-   netstat -tulpn | grep 3030
+   netstat -tulpn | grep 3000
    ```
 
 3. Docker 네트워크 확인
