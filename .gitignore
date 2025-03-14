@@ -1,0 +1,5 @@
+database-data/
+storage-data/
+redis.conf/
+docker.env.dev
+docker.env.prod

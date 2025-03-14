@@ -1,0 +1,57 @@
+services:
+  outline:
+    image: docker.getoutline.com/outlinewiki/outline:latest
+    env_file: ./docker.env
+    environment:
+      TZ: Asia/Seoul
+      PGSSLMODE: disable
+      OUTLINE_URL: "https://wiki.nugabox.com"
+    user: "1000:1000"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./storage-data:/var/lib/outline/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - outline-network
+
+  redis:
+    image: redis
+    env_file: ./docker.env
+    ports:
+      - "3001:6379"
+    volumes:
+      - ./redis.conf:/redis.conf
+    command: ["redis-server", "/redis.conf"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+    networks:
+      - outline-network
+
+  postgres:
+    image: postgres
+    env_file: ./docker.env
+    ports:
+      - "3002:5432"
+    volumes:
+      - ./database-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-d", "outline", "-U", "user"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    environment:
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
+      POSTGRES_DB: "outline"
+    networks:
+      - outline-network
+
+networks:
+  outline-network:
+    driver: bridge
